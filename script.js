@@ -100,7 +100,7 @@ async function init() {
     const id = getQueryParam('id');
 
     if (id !== null) {
-        if (controls) controls.style.display = 'none'; 
+        if (controls) controls.style.display = 'none';
         const article = allArticles.find(a => a.id == id);
         if (article) {
             renderArticle(article);
@@ -108,13 +108,53 @@ async function init() {
             app.innerHTML = '<p>Artículo no encontrado. <a href="index.html">Volver</a></p>';
         }
     } else {
-        if (controls) controls.style.display = 'flex'; 
+        if (controls) controls.style.display = 'flex';
 
         if (searchInput) searchInput.addEventListener('input', filterAndSortArticles);
         if (sortSelect) sortSelect.addEventListener('change', filterAndSortArticles);
 
         filterAndSortArticles();
     }
+}
+
+const themeToggle = document.getElementById('themeToggle');
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+updateThemeIcon(savedTheme);
+
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+    });
+}
+
+function updateThemeIcon(theme) {
+    if (themeToggle) {
+        themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+}
+
+const scrollTopBtn = document.getElementById('scrollToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+        scrollTopBtn.classList.add('visible');
+    } else {
+        scrollTopBtn.classList.remove('visible');
+    }
+});
+
+if (scrollTopBtn) {
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
 }
 
 init();
